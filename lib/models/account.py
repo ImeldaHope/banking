@@ -1,4 +1,5 @@
 from sqlalchemy import (Column, String, Integer, ForeignKey)
+from sqlalchemy.orm import relationship, backref
 from models.models import Base
 
 class Account(Base):
@@ -10,6 +11,8 @@ class Account(Base):
     balance = Column(Integer())
     customer_id = Column(Integer(), ForeignKey('customers.id'))
 
+    transactions = relationship('Transaction', backref=backref('account'))
+    
     def __repr__(self):
         return f'Account(id={self.id}, ' + \
             f'acc_number={self.acc_number}, ' + \

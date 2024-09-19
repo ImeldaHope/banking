@@ -9,7 +9,7 @@ convention = {
 metadata = MetaData(naming_convention=convention)
 Base = declarative_base(metadata=metadata)
 
-# engine = create_engine('sqlite:///:memory:')
+# engine = create_engine('sqlite:///bank.db')
 # Base.metadata.create_all(engine)
 
 # # use our engine to configure a 'Session' class

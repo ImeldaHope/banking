@@ -1,4 +1,4 @@
-
+from models.__init__ import init_db, Session
 from helpers import (
     exit_program,
     create_customer,
@@ -26,62 +26,63 @@ from helpers import (
     list_account_transactions     
 )
 
-
 def main():
+    init_db()
     while True:
         menu()
         choice = input("> ")
+        session = Session()
+        
         if choice == "0":
             exit_program()
         elif choice == "1":
-            create_customer()
+            create_customer(session)
         elif choice == "2":
-            update_customer()
+            update_customer(session)
         elif choice == "3":
-            delete_customer()
+            delete_customer(session)
         elif choice == "4":
-            list_customers()
+            list_customers(session)
         elif choice == "5":
-            find_customer_by_name()
+            find_customer_by_name(session)
         elif choice == "6":
-            find_customer_by_id()
+            find_customer_by_id(session)
         elif choice == "7":
-            create_account()
+            create_account(session)
         elif choice == "8":
-            update_account()
+            update_account(session)
         elif choice == "9":
-            delete_account()
+            delete_account(session)
         elif choice == "10":
-            list_accounts()
+            list_accounts(session)
         elif choice == "11":
-            find_account_by_number()
+            find_account_by_number(session)
         elif choice == "12":
-            find_account_by_id()
+            find_account_by_id(session)
         elif choice == "13":
-            create_transaction()
+            create_transaction(session)
         elif choice == "14":
-            update_transaction()
+            update_transaction(session)
         elif choice == "15":
-            delete_transaction()
+            delete_transaction(session)
         elif choice == "16":
-            find_transaction_by_id()
+            find_transaction_by_id(session)
         elif choice == "17":
-            create_loan()
+            create_loan(session)
         elif choice == "18":
-            update_loan()
+            update_loan(session)
         elif choice == "19":
-            delete_loan()
+            delete_loan(session)
         elif choice == "20":
-            find_loan_by_id()
+            find_loan_by_id(session)
         elif choice == "21":
-            list_customer_accounts()
+            list_customer_accounts(session)
         elif choice == "22":
-            list_customer_loans()
+            list_customer_loans(session)
         elif choice == "23":
-            list_account_transactions()
+            list_account_transactions(session)
         else:
             print("Invalid choice")
-
 
 def menu():
     print("Please select an option:")
@@ -110,6 +111,5 @@ def menu():
     print("22: List customer loans")
     print("23: List account transactions")
    
-
 if __name__ == "__main__":
     main()
