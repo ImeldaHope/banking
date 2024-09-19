@@ -123,57 +123,201 @@ def update_account(session):
     else:
         print(f'Account with ID {acc_id} not found')
 
-def delete_account(session, account):
-    session.delete(account)
-    session.commit()
+def delete_account(session):
+    acc_id = input("Enter account ID that needs to be deleted: ")
+    account = session.query(Account).filter(Account.id == acc_id).first()
+
+    if account:
+        try:
+            session.delete(account)
+            session.commit()
+            print(f"Account with ID {acc_id} has been deleted.")
+        except Exception as e:
+            session.rollback()
+            print(f"Error deleting account: {e}")
+    else:
+        print(f'Account with ID {acc_id} not found')
+
 
 def list_accounts(session):
-    return session.query(Account).all()
+    try:        
+        accounts = session.query(Account).all()
+        print(f"Found {len(accounts)} accounts.")
+        for account in accounts:
+            print(f"Account ID: {account.id}, Account Number: {account.acc_number}, Account Type: {account.acc_type}, Balance: {account.balance}")
+        return accounts
+    except Exception as e:
+        print(f"Error querying customers: {e}")
+        return []
 
-def find_account_by_number(session, acc_number):
-    return session.query(Account).filter(Account.acc_number == acc_number).first()
+def find_account_by_number(session):
+    acc_number = input("Enter account number: ")
+    account = session.query(Account).filter(Account.acc_number == acc_number).first()
+    if account:
+        print(account)
+    else:
+        print("Account not found.")
 
-def find_account_by_id(session,id):
-    return session.query(Account).filter(Account.id == id).first()
+def find_account_by_id(session):
+    acc_id = input("Enter account ID: ")
+    account = session.query(Account).filter(Account.id == acc_id).first()
+    if account:
+        print(account)
+    else:
+        print("Account not found.")
 
 #transaction methods
-def create_transaction(base,engine):
-    base.metadata.create_all(engine)
+def create_transaction(session):
+    amount = input("Enter transaction amount: ")
+    transaction_type = input("Enter transaction type: ")
+    timestamp = input("Enter timestamp: ")
+    acc_id = input("Enter account id: ")    
+    
+    transaction = Transaction(amount=amount, transaction_type=transaction_type, timestamp=timestamp, acc_id=acc_id)
+    save(session, transaction)
 
-def update_transaction(session, transaction, amount):
-    transaction.amount = amount
-    session.add(transaction)
-    session.commit()
+def update_transaction(session):
+    transaction_id = input("Enter transaction ID: ")
+    transaction = session.query(Transaction).filter(Transaction.id == transaction_id).first()
 
-def delete_transaction(session, transaction):
-    session.delete(transaction)
-    session.commit()
+    if transaction:
+        try:
+            #Prompt for new details
+            amount = input("Enter transaction amount: ")
+            transaction_type = input("Enter transaction type: ")
+            timestamp = input("Enter timestamp: ")
+            acc_id = input("Enter account id: ")
 
-def find_transaction_by_id(session, id):
-    return session.query(Transaction).filter(Transaction.id == id).first()
+            #Update transaction details
+            transaction.amount = amount
+            transaction.transaction_type = transaction_type
+            transaction.timestamp = timestamp
+            transaction.acc_id = acc_id
+
+            #Save updated transaction
+            save(session, transaction)
+            print(f'Success: {transaction}')
+        except Exception as exc:
+            print("Error updating transaction: ", exc)
+    else:
+        print(f'Transaction with ID {transaction_id} not found')
+
+def delete_transaction(session):
+    transaction_id = input("Enter transaction ID that needs to be deleted: ")
+    transaction = session.query(Transaction).filter(Transaction.id == transaction_id).first()
+
+    if transaction:
+        try:
+            session.delete(transaction)
+            session.commit()
+            print(f"Transaction with ID {transaction_id} has been deleted.")
+        except Exception as e:
+            session.rollback()
+            print(f"Error deleting transaction: {e}")
+    else:
+        print(f'Transaction with ID {transaction_id} not found')
+
+
+def find_transaction_by_id(session):    
+    transaction_id = input("Enter transaction ID: ")
+    transaction = session.query(Transaction).filter(Transaction.id == transaction_id).first()
+    if transaction:
+        print(transaction)
+    else:
+        print("Transaction not found.")
 
 #loan methods
-def create_loan(base, engine):
-    base.metadata.create_all(engine)
+def create_loan(session):
+    loan_amount = input("Enter loan amount: ")
+    interest_rate = input("Enter interest rate: ")
+    due_date = input("Enter due date: ")
+    customer_id = input("Enter customer id: ")
+    
+    loan = Loan(loan_amount=loan_amount, interest_rate=interest_rate, due_date=due_date, customer_id=customer_id)
+    save(session, loan)
 
-def update_loan(session, loan, loan_amount):
-    loan.loan_amount = loan_amount
-    session.add(loan)
-    session.commit()
+def update_loan(session):
+    loan_id = input("Enter loan ID: ")
+    loan = session.query(Loan).filter(Loan.id == loan_id).first()
 
-def delete_loan(session, loan):
-    session.delete(loan)
-    session.commit()
+    if loan:
+        try:
+            #Prompt for new details
+            loan_amount = input("Enter loan amount: ")
+            interest_rate = input("Enter interest rate: ")
+            due_date = input("Enter due date: ")
+            customer_id = input("Enter customer id: ")
 
-def find_loan_by_id(session, id):
-    return session.query(Loan).filter(Loan.id == id).first()
+            #Update loan details
+            loan.loan_amount = loan_amount
+            loan.interest_rate = interest_rate
+            loan.due_date = due_date
+            loan.customer_id = customer_id
+
+            # Save the updated loan
+            save(session, loan)
+            print(f'Success: {loan}')
+        except Exception as exc:
+            print("Error updating loan: ", exc)
+    else:
+        print(f'Customer with ID {customer_id} not found')
+
+def delete_loan(session):
+    loan_id = input("Enter loan ID: ")
+    loan = session.query(Loan).filter(Loan.id == loan_id).first()
+
+    if loan:
+        try:
+            session.delete(loan)
+            session.commit()
+            print(f"Loan with ID {loan_id} has been deleted.")
+        except Exception as e:
+            session.rollback()
+            print(f"Error deleting loan: {e}")
+    else:
+        print(f'Loan with ID {loan_id} not found')
+
+def find_loan_by_id(session):
+    loan_id = input("Enter loan ID: ")
+    loan = session.query(Loan).filter(Loan.id == loan_id).first()
+    if loan:
+        print(loan)
+    else:
+        print("Loan not found.")
 
 #relationship methods
-def list_customer_accounts(session, customer_id):
-    return session.query(Account).filter(Account.customer_id == customer_id).all()
+def list_customer_accounts(session):    
+    try:        
+        customer_id = input("Enter the customer's ID: ")
+        customer_accounts = session.query(Account).filter(Account.customer_id == customer_id).all()
+        print(f"Found {len(customer_accounts)} accounts for ID: {customer_id}.")
+        for account in customer_accounts:
+            print(f"Account belonging to Customer ID:{account.customer_id}, Account ID: {account.id}, Account Number: {account.acc_number}, Account Type: {account.acc_type}, Balance: {account.balance}")
+        return customer_accounts
+    except Exception as e:
+        print(f"Error querying customer accounts: {e}")
+        return []
+    
+def list_customer_loans(session):
+    try:        
+        customer_id = input("Enter the customer's ID: ")
+        customer_loans = session.query(Loan).filter(Loan.customer_id == customer_id).all()
+        print(f"Found {len(customer_loans)} loans for ID: {customer_id}.")
+        for loan in customer_loans:
+            print(f"Loans belonging to Customer ID:{loan.customer_id}, Loan ID: {loan.id}, Loan amount: {loan.loan_amount}, Interest rate: {loan.interest_rate}, Due date: {loan.due_date}")
+        return customer_loans
+    except Exception as e:
+        print(f"Error querying customer loans: {e}")
+        return []    
 
-def list_customer_loans(session, customer_id):
-    return session.query(Loan).filter(Loan.customer_id == customer_id).all()
-
-def list_account_transactions(session, account_id):
-    return session.query(Transaction).filter(Transaction.acc_id == account_id).all()
+def list_account_transactions(session):
+    try:        
+        acc_id = input("Enter account ID: ")
+        account_transactions = session.query(Transaction).filter(Transaction.acc_id == acc_id).all()
+        print(f"Found {len(account_transactions)} transactions for ID: {acc_id}.")
+        for transaction in account_transactions:
+            print(f"Transactions belonging to Account ID:{transaction.acc_id}, Transaction ID: {transaction.id}, Transaction amount: {transaction.amount}, Transaction type: {transaction.transaction_type}, Timestamp: {transaction.timestamp} ")
+        return account_transactions
+    except Exception as e:
+        print(f"Error querying account transactions: {e}")
+        return []  
