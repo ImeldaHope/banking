@@ -1,8 +1,7 @@
 from faker import Faker
 import random
 
-from models.__init__ import init_db, Session
-
+from models.__init__ import init_db, session
 
 from models.account import Account
 from models.customer import Customer
@@ -11,8 +10,7 @@ from models.loan import Loan
 
 
 if __name__ == '__main__':
-    init_db()
-    session = Session()
+    init_db()    
 
     session.query(Account).delete()
     session.query(Customer).delete()

@@ -1,4 +1,4 @@
-from models.__init__ import init_db, Session
+from models.__init__ import init_db, session
 from helpers import (
     exit_program,
     create_customer,
@@ -31,8 +31,7 @@ def main():
     while True:
         menu()
         choice = input("> ")
-        session = Session()
-        
+                
         if choice == "0":
             exit_program()
         elif choice == "1":

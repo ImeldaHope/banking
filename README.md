@@ -93,6 +93,6 @@ This project involves creating a Command Line Interface (CLI) application for ma
 3. **Input Validation**:
    The application will validate inputs and provide error messages for invalid data entries.
 
-
-
 ---
+
+Thank you for interacting with my banking CLI

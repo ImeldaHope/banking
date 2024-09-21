@@ -11,6 +11,7 @@ DATABASE_URL = 'sqlite:///bank.db'
 
 engine = create_engine(DATABASE_URL)
 Session = sessionmaker(bind=engine)
+session = Session()
 
 def init_db():
     Base.metadata.create_all(bind=engine)
